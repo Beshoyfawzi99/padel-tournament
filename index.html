@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b0f0e">
+    <title>PADEL CUP | Tournament</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #0b0f0e;
+            --panel: #141a18;
+            --panel-light: #1c2420;
+            --lime: #c7ff45;
+            --text: #f4f5ef;
+            --muted: #89938b;
+            --border: #29332d;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.5;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .container {
+            width: min(1180px, 90%);
+            margin: auto;
+        }
+
+        header {
+            border-bottom: 1px solid var(--border);
+            background: rgba(11, 15, 14, 0.96);
+        }
+
+        .nav {
+            height: 76px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 900;
+            font-size: 29px;
+            letter-spacing: 1px;
+        }
+
+        .logo span {
+            color: var(--lime);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            font-size: 13px;
+            color: #bdc5be;
+        }
+
+        .nav-links a:hover {
+            color: var(--lime);
+        }
+
+        .nav-tag {
+            border: 1px solid #47533e;
+            color: var(--lime);
+            border-radius: 5px;
+            padding: 9px 13px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .hero {
+            padding: 75px 0 65px;
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(ellipse at 85% 40%, #26391b 0%, transparent 35%),
+                linear-gradient(135deg, #0b0f0e 50%, #111a11);
+        }
+
+        .eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--lime);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .eyebrow::before {
+            content: "";
+            width: 25px;
+            height: 2px;
+            background: var(--lime);
+        }
+
+        h1 {
+            margin-top: 24px;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: clamp(65px, 10vw, 120px);
+            line-height: .88;
+            font-weight: 900;
+            letter-spacing: -2px;
+            max-width: 750px;
+        }
+
+        h1 span {
+            color: var(--lime);
+        }
+
+        .hero-description {
+            max-width: 470px;
+            margin-top: 25px;
+            color: #aab4ac;
+            font-size: 14px;
+            line-height: 1.9;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 13px 20px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: .5px;
+            display: inline-block;
+            transition: .2s;
+        }
+
+        .btn-primary {
+            background: var(--lime);
+            color: #10150c;
+        }
+
+        .btn-primary:hover {
+            background: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            border: 1px solid #465047;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--lime);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            border: 1px solid var(--border);
+            margin-top: 48px;
+            background: rgba(20, 26, 24, .85);
+        }
+
+        .stat {
+            padding: 22px;
+            border-right: 1px solid var(--border);
+        }
+
+        .stat:last-child {
+            border-right: 0;
+        }
+
+        .stat-number {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 34px;
+            font-weight: 800;
+            color: var(--lime);
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 3px;
+        }
+
+        section.content-section {
+            padding: 65px 0;
+            scroll-margin-top: 20px;
+        }
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .section-label {
+            color: var(--lime);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 43px;
+            line-height: 1.1;
+            margin-top: 7px;
+            text-transform: uppercase;
+        }
+
+        .section-note {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .matches {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .match-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .match-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: var(--muted);
+        }
+
+        .status {
+            color: var(--lime);
+        }
+
+        .team-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            gap: 12px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .team-name {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .team-icon {
+            display: grid;
+            place-items: center;
+            background: var(--panel-light);
+            border: 1px solid var(--border);
+            width: 34px;
+            height: 34px;
+            border-radius: 4px;
+            color: var(--lime);
+            font-size: 11px;
+        }
+
+        .score {
+            font-size: 18px;
+            font-weight: 800;
+            font-family: 'Barlow Condensed', sans-serif;
+        }
+
+        .match-footer {
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .groups {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .group-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .group-title {
+            padding: 16px 20px;
+            background: var(--panel-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 800;
+            font-size: 13px;
+        }
+
+        .group-title span:last-child {
+            color: var(--lime);
+            font-size: 10px;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+            font-size: 11px;
+        }
+
+        th {
+            color: var(--muted);
+            font-size: 9px;
+            letter-spacing: .5px;
+            text-align: center;
+            padding: 13px 9px;
+        }
+
+        th:nth-child(2), td:nth-child(2) {
+            text-align: left;
+        }
+
+        td {
+            text-align: center;
+            padding: 14px 9px;
+            border-top: 1px solid var(--border);
+        }
+
+        td:nth-child(2) {
+            font-weight: 700;
+        }
+
+        .rank {
+            color: var(--muted);
+        }
+
+        .qualified {
+            color: var(--lime);
+        }
+
+        .points {
+            font-weight: 900;
+            color: var(--lime);
+        }
+
+        .bracket {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .round-title {
+            color: var(--lime);
+            font-size: 11px;
+            letter-spacing: 1px;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .bracket-match {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 12px;
+        }
+
+        .bracket-match div {
+            padding: 7px 0;
+            font-size: 11px;
+            color: #bfc7c0;
+        }
+
+        .bracket-match div:first-child {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .bracket-match .tbd {
+            color: #6c776e;
+        }
+
+        .empty-state {
+            padding: 26px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+            border: 1px dashed var(--border);
+            border-radius: 4px;
+        }
+
+        .admin-box {
+            padding: 28px;
+            background: linear-gradient(135deg, #172019, #121714);
+            border: 1px solid #34412f;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .admin-box p {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 7px;
+        }
+
+        footer {
+            padding: 30px 0;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .footer-inner {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        @media (max-width: 700px) {
+            .nav {
+                height: 65px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 55px 0 45px;
+            }
+
+            h1 {
+                font-size: 76px;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+                margin-top: 35px;
+            }
+
+            .stat:nth-child(2) {
+                border-right: 0;
+            }
+
+            .stat:nth-child(-n+2) {
+                border-bottom: 1px solid var(--border);
+            }
+
+            .matches, .groups, .bracket {
+                grid-template-columns: 1fr;
+            }
+
+            section.content-section {
+                padding: 45px 0;
+            }
+
+            .section-heading {
+                align-items: start;
+                flex-direction: column;
+            }
+
+            .admin-box {
+                align-items: start;
+                flex-direction: column;
+            }
+
+            .footer-inner {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="container nav">
+        <a href="#" class="logo">PADEL<span> CUP.</span></a>
+
+        <nav class="nav-links">
+            <a href="#matches">MATCHES</a>
+            <a href="#standings">STANDINGS</a>
+            <a href="#bracket">BRACKET</a>
+        </nav>
+
+        <a class="nav-tag" href="#matches">16 TEAMS / 01 CUP</a>
+    </div>
+</header>
+
+<main>
+    <section class="hero">
+        <div class="container">
+            <div class="eyebrow">The competition starts here</div>
+
+            <h1>OWN THE<br><span>COURT.</span></h1>
+
+            <p class="hero-description">
+                Sixteen teams. One championship.
+                Follow every match, track the standings,
+                and see who makes it all the way to the final.
+            </p>
+
+            <div class="hero-actions">
+                <a href="#matches" class="btn btn-primary">VIEW MATCHES ↗</a>
+                <a href="#standings" class="btn btn-secondary">LEAGUE TABLE</a>
+            </div>
+
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number">16</div>
+                    <div class="stat-label">Teams competing</div>
+                </div>
+
+                <div class="stat">
+                    <div class="stat-number">04</div>
+                    <div class="stat-label">Groups</div>
+                </div>
+
+                <div class="stat">
+                    <div class="stat-number">31</div>
+                    <div class="stat-label">Total matches*</div>
+                </div>
+
+                <div class="stat">
+                    <div class="stat-number">01</div>
+                    <div class="stat-label">Champion</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section" id="matches">
+        <div class="container">
+            <div class="section-heading">
+                <div>
+                    <div class="section-label">The schedule</div>
+                    <h2>Upcoming matches</h2>
+                </div>
+                <div class="section-note">Sample fixtures — to be updated</div>
+            </div>
+
+            <div class="matches" id="matches-container"></div>
+        </div>
+    </section>
+
+    <section class="content-section" id="standings">
+        <div class="container">
+            <div class="section-heading">
+                <div>
+                    <div class="section-label">The leaderboard</div>
+                    <h2>Group standings</h2>
+                </div>
+                <div class="section-note">Top 2 teams qualify from each group</div>
+            </div>
+
+            <div class="groups" id="groups-container"></div>
+        </div>
+    </section>
+
+    <section class="content-section" id="bracket">
+        <div class="container">
+            <div class="section-heading">
+                <div>
+                    <div class="section-label">Road to the trophy</div>
+                    <h2>Knockout stage</h2>
+                </div>
+                <div class="section-note">Quarter-finals → Semi-finals → Final</div>
+            </div>
+
+            <div class="bracket" id="bracket-container"></div>
+        </div>
+    </section>
+
+    <section class="content-section" id="admin">
+        <div class="container">
+            <div class="admin-box">
+                <div>
+                    <div class="section-label">Tournament management</div>
+                    <h2>Admin dashboard</h2>
+                    <p>
+                        Match results and team management will be connected
+                        to a secure admin dashboard in the next stage.
+                    </p>
+                </div>
+
+                <span class="nav-tag">COMING NEXT</span>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="container footer-inner">
+        <div class="logo">PADEL<span> CUP.</span></div>
+        <div>16 TEAMS. ONE CHAMPION.</div>
+        <div>Unofficial tournament website</div>
+    </div>
+</footer>
+
+<script>
+    // Sample data for the first visual version.
+    // We will connect real teams, fixtures, and scores later.
+
+    const groups = [
+        {
+            name: "GROUP A",
+            teams: [
+                { name: "Team Alpha", p: 0, w: 0, l: 0, pts: 0 },
+                { name: "Team Bravo", p: 0, w: 0, l: 0, pts: 0 },
+                { name: "Team Charlie", p: 0, w: 0, l: 0, pts: 0 },
+                { name: "Team Delta", p: 0, w: 0, l: 0, pts: 0 }
+            ]
+        },
+        {
+            name: "GROUP B",
+            teams: [
+                { name: "Team Echo", p: 0, w: 0, l: 0, pts: 0 },
+                { name: "Team Foxtrot", p: 0, w: 0, l: 0, pts: 0 },
+                { name: "Team Golf", p: 0, w: 0, l: 0, pts: 0 },
+                { name: "Team Hotel", p: 0, w: 0, l: 0, pts: 0 }
+            ]
+        },
+        {
+            name: "GROUP C",
+            teams: [
+                { name: "Team India", p: 0, w: 0, l: 0, pts: 0 },
+                { name: "Team Juliet", p: 0, w: 0, l: 0, pts: 0 },
+                { name: "Team Kilo", p: 0, w: 0, l: 0, pts: 0 },
+                { name: "Team Lima", p: 0, w: 0, l: 0, pts: 0 }
+            ]
+        },
+        {
+            name: "GROUP D",
+            teams: [
+                { name: "Team Mike", p: 0, w: 0, l: 0, pts: 0 },
+                { name: "Team November", p: 0, w: 0, l: 0, pts: 0 },
+                { name: "Team Oscar", p: 0, w: 0, l: 0, pts: 0 },
+                { name: "Team Papa", p: 0, w: 0, l: 0, pts: 0 }
+            ]
+        }
+    ];
+
+    const matches = [
+        {
+            group: "GROUP A",
+            team1: "Team Alpha",
+            team2: "Team Bravo",
+            time: "Schedule to be announced",
+            court: "Court 1",
+            score1: null,
+            score2: null
+        },
+        {
+            group: "GROUP A",
+            team1: "Team Charlie",
+            team2: "Team Delta",
+            time: "Schedule to be announced",
+            court: "Court 2",
+            score1: null,
+            score2: null
+        },
+        {
+            group: "GROUP B",
+            team1: "Team Echo",
+            team2: "Team Foxtrot",
+            time: "Schedule to be announced",
+            court: "Court 1",
+            score1: null,
+            score2: null
+        },
+        {
+            group: "GROUP C",
+            team1: "Team India",
+            team2: "Team Juliet",
+            time: "Schedule to be announced",
+            court: "Court 2",
+            score1: null,
+            score2: null
+        }
+    ];
+
+    function renderMatches() {
+        const container = document.getElementById("matches-container");
+
+        container.innerHTML = matches.map(match => `
+            <article class="match-card">
+                <div class="match-top">
+                    <span>${match.group}</span>
+                    <span class="status">
+                        ${match.score1 === null ? "UPCOMING" : "COMPLETED"}
+                    </span>
+                </div>
+
+                <div class="team-row">
+                    <div class="team-name">
+                        <span class="team-icon">${match.team1.slice(5, 7).toUpperCase()}</span>
+                        <span>${match.team1}</span>
+                    </div>
+                    <span class="score">${match.score1 === null ? "—" : match.score1}</span>
+                </div>
+
+                <div class="team-row">
+                    <div class="team-name">
+                        <span class="team-icon">${match.team2.slice(5, 7).toUpperCase()}</span>
+                        <span>${match.team2}</span>
+                    </div>
+                    <span class="score">${match.score2 === null ? "—" : match.score2}</span>
+                </div>
+
+                <div class="match-footer">
+                    <span>${match.time}</span>
+                    <span>${match.court}</span>
+                </div>
+            </article>
+        `).join("");
+    }
+
+    function renderGroups() {
+        const container = document.getElementById("groups-container");
+
+        container.innerHTML = groups.map(group => {
+            const sortedTeams = [...group.teams].sort((a, b) => b.pts - a.pts);
+
+            return `
+                <article class="group-card">
+                    <div class="group-title">
+                        <span>${group.name}</span>
+                        <span>4 TEAMS</span>
+                    </div>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>TEAM</th>
+                                    <th>PLD</th>
+                                    <th>W</th>
+                                    <th>L</th>
+                                    <th>PTS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${sortedTeams.map((team, index) => `
+                                    <tr>
+                                        <td class="${index < 2 ? "qualified" : "rank"}">
+                                            ${index + 1}
+                                        </td>
+                                        <td>${team.name}</td>
+                                        <td>${team.p}</td>
+                                        <td>${team.w}</td>
+                                        <td>${team.l}</td>
+                                        <td class="points">${team.pts}</td>
+                                    </tr>
+                                `).join("")}
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+            `;
+        }).join("");
+    }
+
+    function renderBracket() {
+        const rounds = [
+            {
+                title: "QUARTER-FINALS",
+                matches: 4
+            },
+            {
+                title: "SEMI-FINALS",
+                matches: 2
+            },
+            {
+                title: "FINAL",
+                matches: 1
+            }
+        ];
+
+        document.getElementById("bracket-container").innerHTML =
+            rounds.map(round => `
+                <div>
+                    <div class="round-title">${round.title}</div>
+                    ${Array.from({ length: round.matches }, (_, index) => `
+                        <div class="bracket-match">
+                            <div class="tbd">Qualifier ${index * 2 + 1}</div>
+                            <div class="tbd">Qualifier ${index * 2 + 2}</div>
+                        </div>
+                    `).join("")}
+                </div>
+            `).join("");
+    }
+
+    renderMatches();
+    renderGroups();
+    renderBracket();
+</script>
+
+</body>
+</html>
