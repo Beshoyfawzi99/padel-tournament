@@ -852,6 +852,42 @@
     SUPABASE_KEY
   );
 </script> 
+<script>
+async function loadTeamsFromSupabase() {
+    const { data, error } = await supabaseClient
+        .from('teams')
+        .select('name, group_name')
+        .order('name');
 
+    if (error) {
+        console.error('Error loading teams:', error);
+        return;
+    }
+
+    groups.forEach(group => {
+        group.teams = [];
+    });
+
+    data.forEach(team => {
+        const group = groups.find(
+            g => g.name === `GROUP ${team.group_name}`
+        );
+
+        if (group) {
+            group.teams.push({
+                name: team.name,
+                p: 0,
+                w: 0,
+                l: 0,
+                pts: 0
+            });
+        }
+    });
+
+    renderGroups();
+}
+
+loadTeamsFromSupabase();
+</script>
 </body>
 </html>
