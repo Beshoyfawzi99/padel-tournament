@@ -689,8 +689,32 @@ function renderGroups() {
     }).join("");
 }
 function renderBracket() {
-    const rounds = [{ title: "QUARTER-FINALS", matches: 4 }, { title: "SEMI-FINALS", matches: 2 }, { title: "FINAL", matches: 1 }];
-    document.getElementById("bracket-container").innerHTML = rounds.map(round => '<div><div class="round-title">' + round.title + '</div>' + Array.from({ length: round.matches }, (_, index) => '<div class="bracket-match"><div class="tbd">Qualifier ' + (index * 2 + 1) + '</div><div class="tbd">Qualifier ' + (index * 2 + 2) + '</div></div>').join("") + '</div>').join("");
+    const getQualifier = (groupLetter, position) => {
+        const group = groups.find(item => item.name === "GROUP " + groupLetter);
+        const sortedTeams = group ? [...group.teams].sort((a, b) => b.pts - a.pts || b.w - a.w || a.name.localeCompare(b.name)) : [];
+        const team = sortedTeams[position];
+        return { text: "Group " + groupLetter + " " + (position + 1) + " — " + (team ? team.name : "TBD"), pending: !team };
+    };
+    const quarterFinals = [
+        [getQualifier("A", 0), getQualifier("B", 1)],
+        [getQualifier("B", 0), getQualifier("A", 1)],
+        [getQualifier("C", 0), getQualifier("D", 1)],
+        [getQualifier("D", 0), getQualifier("C", 1)]
+    ];
+    const rounds = [
+        { title: "QUARTER-FINALS", matches: quarterFinals },
+        { title: "SEMI-FINALS", matches: [["Winner QF1", "Winner QF2"], ["Winner QF3", "Winner QF4"]] },
+        { title: "FINAL", matches: [["Winner SF1", "Winner SF2"]] }
+    ];
+    document.getElementById("bracket-container").innerHTML = rounds.map(round =>
+        '<div><div class="round-title">' + round.title + '</div>' + round.matches.map(match =>
+            '<div class="bracket-match">' + match.map(slot => {
+                const text = typeof slot === "string" ? slot : slot.text;
+                const pending = typeof slot === "string" || slot.pending;
+                return '<div class="' + (pending ? "tbd" : "") + '">' + escapeHtml(text) + '</div>';
+            }).join("") + '</div>'
+        ).join("") + '</div>'
+    ).join("");
 }
 renderMatches(); renderGroups(); renderBracket();
 </script>
@@ -715,7 +739,7 @@ function applyTournamentData() {
         if (one && two && Number.isFinite(scoreOne) && Number.isFinite(scoreTwo)) { one.p++; two.p++; if (scoreOne > scoreTwo) { one.w++; one.pts++; two.l++; } else if (scoreTwo > scoreOne) { two.w++; two.pts++; one.l++; } }
         return { group: match.group_name ? "GROUP " + match.group_name : "GROUP", team1: one ? one.name : "Team " + match.team_one_id, team2: two ? two.name : "Team " + match.team_two_id, time: displayDateTime(match.match_date), court: match.court || "Court to be announced", score1: Number.isFinite(scoreOne) ? scoreOne : null, score2: Number.isFinite(scoreTwo) ? scoreTwo : null };
     });
-    matches.splice(0, matches.length, ...publicMatches); renderMatches(); renderGroups(); updateTournamentStats();
+    matches.splice(0, matches.length, ...publicMatches); renderMatches(); renderGroups(); renderBracket(); updateTournamentStats();
 }
 async function refreshTournamentData() {
     const results = await Promise.all([supabaseClient.from("teams").select("id, name, player_one, player_two, group_name").order("name"), supabaseClient.from("matches").select("id, group_name, team_one_id, team_two_id, match_date, court, team_one_score, team_two_score, status").order("match_date", { ascending: true })]);
@@ -760,7 +784,7 @@ document.getElementById("admin-login-form").addEventListener("submit", async eve
 });
 document.getElementById("admin-sign-out").addEventListener("click", async () => { await supabaseClient.auth.signOut(); document.getElementById("admin-dashboard").hidden = true; setMessage("login-message", "You are signed out.", "success"); document.getElementById("admin").scrollIntoView({ behavior: "smooth", block: "start" }); });
 document.getElementById("admin-team-form").addEventListener("submit", async event => {
-    event.preventDefault(); const form = event.currentTarget; if (!await ensureAdminSession("admin-team-message")) return; const button = document.getElementById("add-team-button"); button.disabled = true; setMessage("admin-team-message", "Adding team…");
+    event.preventDefault(); const form = event.currentTarget; const button = document.getElementById("add-team-button"); if (!await ensureAdminSession("admin-team-message")) return; button.disabled = true; setMessage("admin-team-message", "Adding team…");
     const payload = { name: form.elements.teamName.value.trim(), player_one: form.elements.playerOne.value.trim(), player_two: form.elements.playerTwo.value.trim(), group_name: form.elements.groupName.value };
     try { const result = await supabaseClient.from("teams").insert(payload); if (result.error) throw result.error; form.reset(); await refreshTournamentData(); renderAdminTeams(); refreshTeamChoices(); setMessage("admin-team-message", "Team added and the public standings are updated.", "success"); }
     catch (error) { console.error("Could not add team", error); setMessage("admin-team-message", "Could not add that team. Check the details and try again.", "error"); }
