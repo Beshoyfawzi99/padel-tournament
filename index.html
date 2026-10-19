@@ -472,7 +472,7 @@
         .admin-team-message { min-height: 18px; }
         .admin-team-message.is-error { color: #ffb7a7; }
         .admin-team-message.is-success { color: var(--lime); }
-        .admin-actions { display: flex; gap: 8px; }
+        .admin-actions { display: flex; gap: 8px; flex-wrap: wrap; }
         .admin-actions .btn { padding: 9px 11px; font-size: 10px; }
         .admin-remove { color: #ffb7a7; border-color: #67443c; }
         .admin-help-note { color: var(--muted); font-size: 12px; line-height: 1.6; }
@@ -653,7 +653,7 @@
     <div class="admin-dashboard-grid"><section class="admin-panel"><h3>Add a team</h3><p>Enter the team name, players, and group, then save.</p><form id="admin-team-form" class="admin-team-form"><label for="new-team-name">TEAM NAME<input id="new-team-name" name="teamName" type="text" maxlength="60" placeholder="e.g. Team Alpha" required></label><label for="new-team-player-one">PLAYER 1<input id="new-team-player-one" name="playerOne" type="text" maxlength="60" placeholder="Player name"></label><label for="new-team-player-two">PLAYER 2<input id="new-team-player-two" name="playerTwo" type="text" maxlength="60" placeholder="Player name"></label><label for="new-team-group">GROUP<select id="new-team-group" name="groupName" required><option value="A">Group A</option><option value="B">Group B</option><option value="C">Group C</option><option value="D">Group D</option></select></label><button id="add-team-button" class="btn btn-primary" type="submit">ADD TEAM</button></form><p id="admin-team-message" class="admin-team-message" aria-live="polite"></p></section>
     <section class="admin-panel"><h3>Manage teams</h3><p>Edit team details and group below, then press Save. Remove a team if it was added by mistake.</p><div class="table-wrap"><table class="admin-team-table"><thead><tr><th>TEAM</th><th>PLAYER 1</th><th>PLAYER 2</th><th>GROUP</th><th>ACTIONS</th></tr></thead><tbody id="admin-team-list"><tr><td colspan="5">Loading teams…</td></tr></tbody></table></div></section></div>
     <div class="admin-dashboard-grid"><section class="admin-panel"><h3>Schedule a match</h3><p>Choose two teams from the same group, then set the date, time, and court.</p><form id="admin-match-form" class="admin-team-form"><label for="admin-match-group">GROUP<select id="admin-match-group" name="matchGroup"><option value="A">Group A</option><option value="B">Group B</option><option value="C">Group C</option><option value="D">Group D</option></select></label><label for="admin-match-team-one">TEAM ONE<select id="admin-match-team-one" name="teamOne" required></select></label><label for="admin-match-team-two">TEAM TWO<select id="admin-match-team-two" name="teamTwo" required></select></label><label for="admin-match-date">DATE AND TIME<input id="admin-match-date" name="matchDate" type="datetime-local" required></label><label for="admin-match-court">COURT<input id="admin-match-court" name="court" type="text" maxlength="40" value="Court 1" required></label><button id="add-match-button" class="btn btn-primary" type="submit">ADD MATCH</button></form><p id="admin-match-message" class="admin-team-message" aria-live="polite"></p></section>
-    <section class="admin-panel"><h3>Update scores</h3><p>Enter how many sets each team won. Leave both score boxes blank to clear a result.</p><div class="table-wrap"><table class="admin-team-table"><thead><tr><th>GROUP</th><th>TEAMS</th><th>DATE / COURT</th><th>SETS WON</th><th>ACTION</th></tr></thead><tbody id="admin-match-list"><tr><td colspan="5">Loading matches…</td></tr></tbody></table></div></section></div><p class="admin-help-note">Saved fixtures and results appear on the public schedule. Group standings award one point for each match win.</p></div></section>
+    <section class="admin-panel"><h3>Update scores</h3><p>Save a score, clear a result to keep the match scheduled, or remove the match and its score.</p><div class="table-wrap"><table class="admin-team-table"><thead><tr><th>GROUP</th><th>TEAMS</th><th>DATE / COURT</th><th>SETS WON</th><th>ACTIONS</th></tr></thead><tbody id="admin-match-list"><tr><td colspan="5">Loading matches…</td></tr></tbody></table></div></section></div><p class="admin-help-note">Saved fixtures and results appear on the public schedule. Group standings award one point for each match win.</p></div></section>
 </main>
 
 <footer>
@@ -760,7 +760,7 @@ function renderAdminMatches() {
     body.innerHTML = matchRecords.map(match => {
         const one = byId.get(String(match.team_one_id)); const two = byId.get(String(match.team_two_id)); const nameOne = one ? one.name : "Team " + match.team_one_id; const nameTwo = two ? two.name : "Team " + match.team_two_id;
         const scoreOne = match.team_one_score === null ? "" : escapeHtml(match.team_one_score); const scoreTwo = match.team_two_score === null ? "" : escapeHtml(match.team_two_score);
-        return '<tr data-match-id="' + escapeHtml(match.id) + '"><td>' + escapeHtml("Group " + match.group_name) + '</td><td>' + escapeHtml(nameOne) + '<br>vs.<br>' + escapeHtml(nameTwo) + '</td><td>' + escapeHtml(displayDateTime(match.match_date)) + '<br>' + escapeHtml(match.court || "Court to be announced") + '</td><td><div class="admin-score-inputs"><input data-score="one" type="number" min="0" step="1" aria-label="Sets won by ' + escapeHtml(nameOne) + '" value="' + scoreOne + '"><span>–</span><input data-score="two" type="number" min="0" step="1" aria-label="Sets won by ' + escapeHtml(nameTwo) + '" value="' + scoreTwo + '"></div></td><td><button class="btn btn-primary" type="button" data-action="save-score">SAVE</button></td></tr>';
+        return '<tr data-match-id="' + escapeHtml(match.id) + '"><td>' + escapeHtml("Group " + match.group_name) + '</td><td>' + escapeHtml(nameOne) + '<br>vs.<br>' + escapeHtml(nameTwo) + '</td><td>' + escapeHtml(displayDateTime(match.match_date)) + '<br>' + escapeHtml(match.court || "Court to be announced") + '</td><td><div class="admin-score-inputs"><input data-score="one" type="number" min="0" step="1" aria-label="Sets won by ' + escapeHtml(nameOne) + '" value="' + scoreOne + '"><span>–</span><input data-score="two" type="number" min="0" step="1" aria-label="Sets won by ' + escapeHtml(nameTwo) + '" value="' + scoreTwo + '"></div></td><td><div class="admin-actions"><button class="btn btn-primary" type="button" data-action="save-score">SAVE</button><button class="btn btn-secondary" type="button" data-action="clear-score">CLEAR SCORE</button><button class="btn btn-secondary admin-remove" type="button" data-action="remove-match">REMOVE MATCH</button></div></td></tr>';
     }).join("");
 }
 async function ensureAdminSession(messageId) {
@@ -815,12 +815,30 @@ document.getElementById("admin-match-form").addEventListener("submit", async eve
     finally { button.disabled = false; }
 });
 document.getElementById("admin-match-list").addEventListener("click", async event => {
-    const button = event.target.closest('button[data-action="save-score"]'); if (!button) return; if (!await ensureAdminSession("admin-match-message")) return; const row = button.closest("tr");
+    const button = event.target.closest("button[data-action]"); if (!button) return;
+    const action = button.dataset.action; if (!["save-score", "clear-score", "remove-match"].includes(action)) return;
+    if (!await ensureAdminSession("admin-match-message")) return;
+    const row = button.closest("tr"); const matchId = row.dataset.matchId;
+    if (action === "remove-match") {
+        if (!window.confirm("Remove this match and its saved score? This cannot be undone from the dashboard.")) return;
+        button.disabled = true;
+        const result = await supabaseClient.from("matches").delete().eq("id", matchId);
+        if (result.error) { console.error("Could not remove match", result.error); setMessage("admin-match-message", "Could not remove this match. Check access and try again.", "error"); }
+        else { await refreshTournamentData(); renderAdminMatches(); setMessage("admin-match-message", "Match removed. Public fixtures and standings are updated.", "success"); }
+        button.disabled = false; return;
+    }
+    if (action === "clear-score") {
+        button.disabled = true;
+        const result = await supabaseClient.from("matches").update({ team_one_score: null, team_two_score: null, status: "scheduled" }).eq("id", matchId);
+        if (result.error) { console.error("Could not clear match score", result.error); setMessage("admin-match-message", "Could not clear the score. Check access and try again.", "error"); }
+        else { await refreshTournamentData(); renderAdminMatches(); setMessage("admin-match-message", "Score cleared. The match remains scheduled.", "success"); }
+        button.disabled = false; return;
+    }
     const oneText = row.querySelector('[data-score="one"]').value.trim(); const twoText = row.querySelector('[data-score="two"]').value.trim();
     if ((oneText === "") !== (twoText === "")) { setMessage("admin-match-message", "Enter both scores, or leave both blank to clear the result.", "error"); return; }
     let oneScore = null; let twoScore = null;
     if (oneText !== "") { oneScore = Number(oneText); twoScore = Number(twoText); if (!Number.isInteger(oneScore) || !Number.isInteger(twoScore) || oneScore < 0 || twoScore < 0) { setMessage("admin-match-message", "Scores must be whole numbers of zero or more.", "error"); return; } if (oneScore === twoScore) { setMessage("admin-match-message", "A match result needs one winning team. The scores cannot be tied.", "error"); return; } }
-    button.disabled = true; const result = await supabaseClient.from("matches").update({ team_one_score: oneScore, team_two_score: twoScore, status: oneScore === null ? "scheduled" : "completed" }).eq("id", row.dataset.matchId);
+    button.disabled = true; const result = await supabaseClient.from("matches").update({ team_one_score: oneScore, team_two_score: twoScore, status: oneScore === null ? "scheduled" : "completed" }).eq("id", matchId);
     if (result.error) { console.error("Could not save match score", result.error); setMessage("admin-match-message", "Could not save the score. Check the numbers and try again.", "error"); }
     else { await refreshTournamentData(); renderAdminMatches(); setMessage("admin-match-message", oneScore === null ? "Match result cleared." : "Score saved. Public fixtures and standings are updated.", "success"); } button.disabled = false;
 });
