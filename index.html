@@ -760,7 +760,7 @@ document.getElementById("admin-login-form").addEventListener("submit", async eve
 });
 document.getElementById("admin-sign-out").addEventListener("click", async () => { await supabaseClient.auth.signOut(); document.getElementById("admin-dashboard").hidden = true; setMessage("login-message", "You are signed out.", "success"); document.getElementById("admin").scrollIntoView({ behavior: "smooth", block: "start" }); });
 document.getElementById("admin-team-form").addEventListener("submit", async event => {
-    event.preventDefault(); if (!await ensureAdminSession("admin-team-message")) return; const form = event.currentTarget; const button = document.getElementById("add-team-button"); button.disabled = true;
+    event.preventDefault(); const form = event.currentTarget; if (!await ensureAdminSession("admin-team-message")) return; const button = document.getElementById("add-team-button"); button.disabled = true; setMessage("admin-team-message", "Adding team…");
     const payload = { name: form.elements.teamName.value.trim(), player_one: form.elements.playerOne.value.trim(), player_two: form.elements.playerTwo.value.trim(), group_name: form.elements.groupName.value };
     try { const result = await supabaseClient.from("teams").insert(payload); if (result.error) throw result.error; form.reset(); await refreshTournamentData(); renderAdminTeams(); refreshTeamChoices(); setMessage("admin-team-message", "Team added and the public standings are updated.", "success"); }
     catch (error) { console.error("Could not add team", error); setMessage("admin-team-message", "Could not add that team. Check the details and try again.", "error"); }
@@ -781,11 +781,11 @@ document.getElementById("admin-team-list").addEventListener("click", async event
 });
 document.getElementById("admin-match-group").addEventListener("change", refreshTeamChoices);
 document.getElementById("admin-match-form").addEventListener("submit", async event => {
-    event.preventDefault(); if (!await ensureAdminSession("admin-match-message")) return; const form = event.currentTarget; const group = form.elements.matchGroup.value; const oneId = form.elements.teamOne.value; const twoId = form.elements.teamTwo.value;
+    event.preventDefault(); const form = event.currentTarget; if (!await ensureAdminSession("admin-match-message")) return; const group = form.elements.matchGroup.value; const oneId = form.elements.teamOne.value; const twoId = form.elements.teamTwo.value;
     if (!oneId || !twoId || oneId === twoId) { setMessage("admin-match-message", "Choose two different teams.", "error"); return; }
     const one = teamRecords.find(team => String(team.id) === oneId); const two = teamRecords.find(team => String(team.id) === twoId);
     if (!one || !two || String(one.group_name) !== group || String(two.group_name) !== group) { setMessage("admin-match-message", "Choose both teams from the selected group.", "error"); return; }
-    const button = document.getElementById("add-match-button"); button.disabled = true;
+    const button = document.getElementById("add-match-button"); button.disabled = true; setMessage("admin-match-message", "Scheduling match…");
     try { const result = await supabaseClient.from("matches").insert({ group_name: group, team_one_id: Number(oneId), team_two_id: Number(twoId), match_date: new Date(form.elements.matchDate.value).toISOString(), court: form.elements.court.value.trim(), team_one_score: null, team_two_score: null, status: "scheduled" }); if (result.error) throw result.error; form.reset(); document.getElementById("admin-match-court").value = "Court 1"; refreshTeamChoices(); await refreshTournamentData(); renderAdminMatches(); setMessage("admin-match-message", "Match scheduled and added to the public fixture list.", "success"); }
     catch (error) { console.error("Could not schedule match", error); setMessage("admin-match-message", "Could not schedule this match. Check the date, teams, and court.", "error"); }
     finally { button.disabled = false; }
